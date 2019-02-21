@@ -108,6 +108,21 @@ server.delete('/api/cohorts/:id', (req, res) => {
       })
   });
 
+  // ********* students 
+
+  server.get('/api/students', (req, res) => {
+    db('students')
+        .join('cohorts','students.cohort_id', 'cohorts.id')
+        .select('students.name', 'cohorts.name AS cohort', 'students.id')
+        .then(students => {
+            res.status(200).json({ students })
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({ error: 'Could not get students' })
+        })
+});
+
 const port = process.env.PORT || 3300;
 server.listen(port, function() {
   console.log(`\n=== Web API Listening on http://localhost:${port} ===\n`);
